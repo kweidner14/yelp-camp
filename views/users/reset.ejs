@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <form class="form-signin" action="/reset/<%= token %>" method="POST">
+            <img class="mb-4" src="/images/tent.png" alt="" width="72" height="72">
+            <legend>Reset Password</legend>
+            <div class="form-group">
+                <input type="password" name="password" value="" placeholder="New Password" autofocus="autofocus"
+                       class="form-control">
+            </div>
+            <div class="form-group">
+                <input type="password" name="confirm" value="" placeholder="Confirm Password" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Reset Password</button>
+            </div>
+        </form>
+        <a href="/campgrounds">Go Back</a>
+    </div>
+</div>
+
+<% include ../partials/footer%>

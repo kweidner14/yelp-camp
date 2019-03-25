@@ -1,0 +1,40 @@
+<% include ./partials/header %>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+    </div>
+    <div class="col-md-12">
+        <form class="form-signin text-center" action="/register" method="POST">
+            <img class="mb-4" src="/images/tent.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Please Sign Up</h1>
+            <label for="registerUsername" class="sr-only">Username</label>
+            <input type="text" id="registerUsername" class="form-control" placeholder="Username" name="username" required autofocus>
+
+            <label for="registerPassword" class="sr-only">Password</label>
+            <input type="password" id="registerPassword" name="password" placeholder="password" class="form-control">
+            <hr>
+
+            <label for="registerFirstName" class="sr-only">First Name</label>
+            <input type="text" id="registerFirstName" name="firstName" placeholder="First Name" class="form-control">
+
+            <label for="registerLastName" class="sr-only">First Name</label>
+            <input type="text" id="registerLastName" name="lastName" placeholder="Last Name" class="form-control">
+
+            <label for="registerEmail" class="sr-only">First Name</label>
+            <input type="email" id="registerEmail" name="email" placeholder="example@email.com" class="form-control">
+
+            <label for="registerAvatar" class="sr-only">First Name</label>
+            <input type="text" id="registerAvatar" name="avatar" placeholder="avatar url" class="form-control">
+
+            <label for="registerAdmin" class="sr-only">First Name</label>
+            <input type="password" id="registerAdmin" name="adminCode" placeholder="admin code" class="form-control">
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+        </form>
+        <form class="form-signin">
+            <a href="/campgrounds">Go Back</a>
+        </form>
+    </div>
+</div>
+
+<% include ./partials/footer %>

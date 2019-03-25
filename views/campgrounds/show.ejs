@@ -1,0 +1,141 @@
+<% include ../partials/header %>
+
+<style>
+    /*body {*/
+        /*margin: 0;*/
+        /*padding: 0;*/
+    /*}*/
+
+    #map {
+
+        width: 100%;
+        height: 400px;
+    }
+
+    .marker {
+        background-image: url('/images/mapbox-icon.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .mapboxgl-popup {
+        max-width: 200px;
+    }
+
+    .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+
+</style>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div id='map'></div>
+        </div>
+        <div class="col-md-9">
+            <div class="card mb-3">
+                <img src="<%= campground.image %>" class="card-img-top showImg" alt="<%= campground.name %>">
+                <div class="card-body">
+                    <p class="float-right">$<%= campground.price %>/night</p>
+                    <h2 class="card-title" id="card-title"><%= campground.name %></h2>
+                    <p class="text-muted">
+                        <em>Submitted By <a href="/users/<%= campground.author.id %>"><%= campground.author.username %></a>, <%= moment(campground.createdAt).fromNow() %></em>
+                    </p>
+                    <hr>
+                        <p class="card-text"><%= campground.description %></p>
+                        <% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                            <a class="btn btn-xs btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+                            <form class="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                                <button class="btn btn-xs btn-danger">Delete</button>
+                            </form>
+                        <% } %>
+                    </div>
+                </div>
+
+            <!--REVIEW SECTION-->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <% if (campground.rating === 0) { %>
+                        <h5>
+                            <em>No reviews yet.</em>
+                        </h5>
+                    <% } else { %>
+                        <p>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star <% if (campground.rating > 1.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 2.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 3.5) { %> checked <% } %>"></span>
+                            <span class="fa fa-star <% if (campground.rating > 4.5) { %> checked <% } %>"></span>
+                            <em>(total reviews: <%= campground.reviews.length %>)</em>
+                        </p>
+                        <p>
+                            Current campground rating: <strong><%= campground.rating.toFixed(2) %></strong>
+                        </p>
+                        <p><h4>Latest reviews for this campground:</h4></p>
+                        <hr style="margin-top: 0;">
+                        <% campground.reviews.slice(0, 5).forEach(function(review){ %>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <%- '<span class="fa fa-star checked"></span>'.repeat(review.rating) %><%- '<span class="fa fa-star"></span>'.repeat(5 - review.rating) %>
+                                    <div>Review by: <strong><%= review.author.username %></strong></div>
+                                    <span><em><%= review.updatedAt.toDateString() %></em></span>
+                                </div>
+                                <div class="col-md-9">
+                                    <p style="text-align: justify; word-wrap: break-word;">
+                                        <%= review.text %>
+                                    </p>
+                                    <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
+                                    <a class="btn btn-xs btn-warning"
+                                       href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">Edit</a>
+                                    <form id="delete-form" action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
+                                        <input type="submit" class="btn btn-xs btn-danger" value="Delete">
+                                    </form>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <hr>
+                        <% }); %>
+                        <div style="margin-bottom: 10px;">
+                            <h4><a href="/campgrounds/<%= campground._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i> See all reviews</a></h4>
+                        </div>
+                    <% } %>
+                    <div>
+                        <a class="btn btn-primary btn-lg <% if (currentUser && campground.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground._id %>/reviews/new">
+                            Write a New Review</a>
+                    </div>
+                </div>
+            </div>
+
+    <script>
+
+        let campground = <%- JSON.stringify(campground) %>
+
+        mapboxgl.accessToken = "pk.eyJ1Ijoia3dlaWRuZXIxNCIsImEiOiJjanN2MGhjcHEwMjFqNDNwcnJneWRlZGkwIn0.6kddR1Ip-S39PTiocWJ_RA";
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v10',
+            center: campground.coordinates,
+            zoom: 6
+        });
+
+        // create a HTML element for our campground location/marker
+        var el = document.createElement('div');
+        el.className = 'marker';
+
+        // make a marker for our location and add to the map
+        new mapboxgl.Marker(el)
+            .setLngLat(campground.coordinates)
+            .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+                .setHTML('<h3>' + campground.name + '</h3><p>' + campground.location + '</p>'))
+            .addTo(map);
+
+
+    </script>
+
+<% include ../partials/footer %>

@@ -1,0 +1,20 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+    </div>
+    <div class="col-md-12">
+        <form class="form-signin text-center" action="/forgot" method="POST">
+            <img class="mb-4" src="/images/tent.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Forgot Password</h1>
+            <label for="forgotPasswordEmail" class="sr-only">Email address</label>
+            <input type="text" id="forgotPasswordEmail" class="form-control mb-2" placeholder="E-Mail" name="email" required autofocus>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Send E-Mail</button>
+        </form>
+        <form class="form-signin">
+            <a href="/campgrounds">Go Back</a>
+        </form>
+    </div>
+</div>
+
+<% include ../partials/footer %>
